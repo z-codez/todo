@@ -7,6 +7,10 @@ const taskForm = document.getElementById("task-form")
 const confirmCloseDialog = document.querySelector("dialog");
 const cancelButton = document.getElementById("cancel-btn");
 const discardButton = document.getElementById("discard-btn");
+
+const titleInput = document.getElementById("title");
+const dateInput = document.getElementById("date");
+const desc = document.getElementById("desc");
 class Task {
     title;
     date;
@@ -19,7 +23,7 @@ class Task {
     }
 }
 
-let tasks = [Task];
+let tasks = new Map();
 
 // Event Listeners
 
@@ -30,10 +34,25 @@ function addNewTask() {
     displayTasks.classList.toggle("hidden");
 }
 
-taskForm.addEventListener("submit", () => {
-    tasks.push(new Task());
-    displayTasks.innerHTML += `  
-        `;
+taskForm.addEventListener("submit", (e) => {
+
+    e.preventDefault();
+    const task = new Task(titleInput.value, dateInput.value, desc.value);
+    let key = task.title.toLowerCase().split(" ").join("-");
+    tasks.set(key, task);
+    console.log(tasks.keys());
+    taskForm.classList.toggle("hidden");
+    displayTasks.classList.toggle("hidden");
+
+    const HTMLString = `
+    <div>
+        <p>Title: ${task.title}</p>
+        <p>Date: ${task.date}</p>
+        <p>Description: ${task.description}</p>
+    </div>
+    `;
+    displayTasks.innerHTML += HTMLString;
+
 });
 // Event Listeners
 closeBtn.addEventListener("click", () => {

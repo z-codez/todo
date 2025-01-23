@@ -18,11 +18,15 @@ h1 {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 20px;
   border: 6px solid #F1BE32;
   border-radius: 5px;
   background-color: white;
   min-height: 500px;
+}
+
+.display div {
+  color: black;
 }
 
 .task-form {
