@@ -1,9 +1,12 @@
 const displayTasks = document.getElementById("display");
 const newTaskBtn = displayTasks.querySelector("button");
-
 const wrapper = document.getElementById("wrapper");
-
-
+// Buttons in the form
+const closeBtn = wrapper.querySelector("#close-btn");
+const taskForm = document.getElementById("task-form")
+const confirmCloseDialog = document.querySelector("dialog");
+const cancelButton = document.getElementById("cancel-btn");
+const discardButton = document.getElementById("discard-btn");
 class Task {
     title;
     date;
@@ -22,37 +25,28 @@ let tasks = [Task];
 
 newTaskBtn.addEventListener("click", addNewTask);
 
-
-
 function addNewTask() {
-    wrapper.innerHTML = "";
-    wrapper.innerHTML = `
-    <form>
-      <svg tabindex="0" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F44336"><path d="m251.33-204.67-46.66-46.66L433.33-480 204.67-708.67l46.66-46.66L480-526.67l228.67-228.66 46.66 46.66L526.67-480l228.66 228.67-46.66 46.66L480-433.33 251.33-204.67Z"/></svg>
-      <div class="input">
-        <label for="title">Title</label>
-        <input type="text" id="title" required/>
-      </div>
-      <div class="input">
-        <label for="date">Date</label>
-        <input id="date" type="date" required/>
-      </div>
-      <div class="input">
-        <label for="desc">Description</label>
-        <textarea id="desc" cols="" rows="5" required></textarea>
-      </div>
-      <button type="submit">Add Task</button>
-    </form>
-    `;
-
-    // Buttons in the form
-    const cancelBtn = wrapper.querySelector("form svg");
-    const submitBtn = wrapper.querySelector("form button");
-
-    // Event Listeners
-    cancelBtn.addEventListener("click", goToHome);
-    submitBtn.addEventListener("click", () => {
-        tasks.push(new Task());
-        goToHome();
-    });
+    taskForm.classList.toggle("hidden");
+    displayTasks.classList.toggle("hidden");
 }
+
+taskForm.addEventListener("submit", () => {
+    tasks.push(new Task());
+    displayTasks.innerHTML += `  
+        `;
+});
+// Event Listeners
+closeBtn.addEventListener("click", () => {
+    confirmCloseDialog.showModal();
+});
+
+cancelButton.addEventListener("click", ()=>{
+    confirmCloseDialog.close();
+});
+
+discardButton.addEventListener("click", () => {
+    confirmCloseDialog.close();
+    taskForm.classList.toggle("hidden");
+    displayTasks.classList.toggle("hidden");
+})
+

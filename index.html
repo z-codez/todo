@@ -13,12 +13,37 @@
   <main>
     <h1>Todo App</h1>
     <div id="wrapper">
-      <section id="display">
-        <button type="button" >Add New Task</button>
+      <section id="display" class="display">
+        <button class="large-btn" type="button" >Add New Task</button>
       </section>
+      <form id="task-form" class="hidden task-form">
+        <button id="close-btn" aria-label="close" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F44336"><path d="m251.33-204.67-46.66-46.66L433.33-480 204.67-708.67l46.66-46.66L480-526.67l228.67-228.66 46.66 46.66L526.67-480l228.66 228.67-46.66 46.66L480-433.33 251.33-204.67Z"/></svg>
+        </button>
+        <div class="input">
+          <label for="title">Title</label>
+          <input type="text" id="title" required/>
+        </div>
+        <div class="input">
+          <label for="date">Date</label>
+          <input id="date" type="date" required/>
+        </div>
+        <div class="input">
+          <label for="desc">Description</label>
+          <textarea id="desc" cols="" rows="5" required></textarea>
+        </div>
+        <button class="large-btn" type="submit">Add Task</button>
+      </form>
+      <dialog class="confirm-close-dialog">
+        <form method="dialog">
+          <p>Discard unsaved changes?</p>
+          <div id="confirm-close-dialog-btn-container">
+            <button id="cancel-btn" class="btn" type="button">Cancel</button>
+            <button id="discard-btn" class="btn" type="button">Discard</button>
+          </div>
+        </form>
+      </dialog>
     </div>
-
-
   </main>
   <script src="js/app.js"></script>
 

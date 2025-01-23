@@ -11,9 +11,8 @@ h1 {
   text-align: center;
   margin-bottom: 3rem;
 }
-#wrapper {
-}
-section {
+
+.display {
   margin: 0 auto;
   width: 420px;
   padding: 20px;
@@ -26,11 +25,7 @@ section {
   min-height: 500px;
 }
 
-.hidden {
-  display: none;
-}
-
-form {
+.task-form {
   margin: 0 auto;
   padding: 20px;
   width: 420px;
@@ -45,7 +40,11 @@ form {
   border-radius: 5px;
 }
 
-form svg {
+
+#close-btn {
+  cursor: pointer;
+  border-style: none;
+  background-color: inherit;
   align-self: self-end;
 }
 
@@ -63,7 +62,8 @@ textarea {
   margin-bottom: 40px;
 }
 
-button {
+.large-btn {
+  cursor: pointer;
   background-image: linear-gradient(180deg, #FECC4C, #FEAC32);
   width: 300px;
   margin: 0 auto;
@@ -74,6 +74,55 @@ button {
   font-size: 1.2rem;
 }
 
-button:hover {
+.large-btn:hover {
   background-image: linear-gradient(180deg, #ffcc4c, #f89808);
+}
+
+.btn {
+  cursor: pointer;
+  background-image: linear-gradient(180deg, #FECC4C, #FEAC32);
+  width: 100px;
+  background-color: #FEAC32;
+  border: 3px solid #FEAC32;
+  border-bottom-color: #AA7321;
+  border-right-color: #AA7321;
+  font-size: 1rem;
+}
+
+.btn:hover {
+  background-image: linear-gradient(180deg, #ffcc4c, #f89808);
+}
+dialog {
+  border-radius: 10px;
+  margin: 10px auto 0;
+  width: 320px;
+  height: 120px;
+  padding: 5px;
+}
+
+dialog form {
+  width: 90%;
+  margin: 0 auto;
+}
+
+#confirm-close-dialog-btn-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.confirm-close-dialog-btn {
+  background-image: linear-gradient(180deg, #FECC4C, #FEAC32);
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+dialog p {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.hidden {
+  display: none;
 }
