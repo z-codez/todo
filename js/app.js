@@ -36,31 +36,13 @@ function addNewTask() {
 }
 
 taskForm.addEventListener("submit", (e) => {
-
     e.preventDefault();
-    const task = new Task(titleInput.value, dateInput.value, desc.value);
-    let id = task.title.toLowerCase().split(" ").join("-");
-    if (tasks.has(id)) {}
-    else {
-        tasks.set(id, task);
-        console.log(tasks.keys());
 
-        const HTMLString = `
-        <div id="${id}" class="task">
-            <p><strong>Title:</strong> ${task.title}</p>
-            <p><strong>Date:</strong> ${task.date}</p>
-            <p><strong>Description:</strong> ${task.description}</p>
-            <button type="button" class="btn">Edit</button>
-            <button type="button" class="btn">Delete</button>
-        </div>
-        `;
+    // Array destructuring
+    const [id, task] = addOrUpdateTask();
 
-        // displayTasks.innerHTML += HTMLString;
-        // insertAdjacentHTML is superior to innerHTML += because it does not corrupt the DOM and remove JS references
-        tasksContainer.insertAdjacentHTML("beforeend", HTMLString);
+    displayTask(id, task);
 
-        reset();
-    }
 });
 // Event Listeners
 closeBtn.addEventListener("click", () => {
@@ -91,5 +73,30 @@ const reset = () => {
     tasksContainer.classList.toggle("hidden");
 };
 
-const addOrUpdateTask = () => {};
-const displayTask = () => {};
+const addOrUpdateTask = () => {
+
+    const task = new Task(titleInput.value, dateInput.value, desc.value);
+    let id = task.title.toLowerCase().split(" ").join("-");
+    if (tasks.has(id)) {}
+    else {
+        tasks.set(id, task);
+    }
+    return [id, tasks.get(id)];
+};
+const displayTask = (id, task) => {
+    const HTMLString = `
+        <div id="${id}" class="task">
+            <p><strong>Title:</strong> ${task.title}</p>
+            <p><strong>Date:</strong> ${task.date}</p>
+            <p><strong>Description:</strong> ${task.description}</p>
+            <button type="button" class="btn">Edit</button>
+            <button type="button" class="btn">Delete</button>
+        </div>
+        `;
+
+    // displayTasks.innerHTML += HTMLString;
+    // insertAdjacentHTML is superior to innerHTML += because it does not corrupt the DOM and remove JS references
+    tasksContainer.insertAdjacentHTML("beforeend", HTMLString);
+
+    reset();
+};
