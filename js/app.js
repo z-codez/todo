@@ -1,6 +1,7 @@
-const displayTasks = document.getElementById("display");
-const newTaskBtn = displayTasks.querySelector("button");
+const tasksContainer = document.getElementById("display");
+const newTaskBtn = tasksContainer.querySelector("#add-new-task-btn");
 const wrapper = document.getElementById("wrapper");
+
 // Buttons in the form
 const closeBtn = wrapper.querySelector("#close-btn");
 const taskForm = document.getElementById("task-form")
@@ -31,32 +32,45 @@ newTaskBtn.addEventListener("click", addNewTask);
 
 function addNewTask() {
     taskForm.classList.toggle("hidden");
-    displayTasks.classList.toggle("hidden");
+    tasksContainer.classList.toggle("hidden");
 }
 
 taskForm.addEventListener("submit", (e) => {
 
     e.preventDefault();
     const task = new Task(titleInput.value, dateInput.value, desc.value);
-    let key = task.title.toLowerCase().split(" ").join("-");
-    tasks.set(key, task);
-    console.log(tasks.keys());
-    taskForm.classList.toggle("hidden");
-    displayTasks.classList.toggle("hidden");
+    let id = task.title.toLowerCase().split(" ").join("-");
+    if (tasks.has(id)) {}
+    else {
+        tasks.set(id, task);
+        console.log(tasks.keys());
 
-    const HTMLString = `
-    <div>
-        <p>Title: ${task.title}</p>
-        <p>Date: ${task.date}</p>
-        <p>Description: ${task.description}</p>
-    </div>
-    `;
-    displayTasks.innerHTML += HTMLString;
+        const HTMLString = `
+        <div id="${id}" class="task">
+            <p><strong>Title:</strong> ${task.title}</p>
+            <p><strong>Date:</strong> ${task.date}</p>
+            <p><strong>Description:</strong> ${task.description}</p>
+            <button type="button" class="btn">Edit</button>
+            <button type="button" class="btn">Delete</button>
+        </div>
+        `;
 
+        // displayTasks.innerHTML += HTMLString;
+        // insertAdjacentHTML is superior to innerHTML += because it does not corrupt the DOM and remove JS references
+        tasksContainer.insertAdjacentHTML("beforeend", HTMLString);
+
+        reset();
+    }
 });
 // Event Listeners
 closeBtn.addEventListener("click", () => {
-    confirmCloseDialog.showModal();
+    const formInputsContainValues = titleInput.value || dateInput.value || desc.value;
+
+    if(formInputsContainValues) {
+        confirmCloseDialog.showModal();
+    } else {
+        reset();
+    }
 });
 
 cancelButton.addEventListener("click", ()=>{
@@ -65,7 +79,17 @@ cancelButton.addEventListener("click", ()=>{
 
 discardButton.addEventListener("click", () => {
     confirmCloseDialog.close();
-    taskForm.classList.toggle("hidden");
-    displayTasks.classList.toggle("hidden");
-})
+    reset();
+});
 
+
+const reset = () => {
+    // Array destructuring to clear input fields
+    [titleInput.value, dateInput.value, desc.value] = ["","",""];
+
+    taskForm.classList.toggle("hidden");
+    tasksContainer.classList.toggle("hidden");
+};
+
+const addOrUpdateTask = () => {};
+const displayTask = () => {};
