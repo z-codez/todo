@@ -38,10 +38,10 @@ function addNewTask() {
 taskForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    // Array destructuring
-    const [id, task] = addOrUpdateTask();
+    addOrUpdateTask();
+    displayTasks();
+    reset();
 
-    displayTask(id, task);
 
 });
 // Event Listeners
@@ -77,26 +77,52 @@ const addOrUpdateTask = () => {
 
     const task = new Task(titleInput.value, dateInput.value, desc.value);
     let id = task.title.toLowerCase().split(" ").join("-");
-    if (tasks.has(id)) {}
-    else {
-        tasks.set(id, task);
-    }
-    return [id, tasks.get(id)];
+
+    // Adds or updates tasks map
+    tasks.set(id, task);
 };
-const displayTask = (id, task) => {
-    const HTMLString = `
+const displayTasks = () => {
+
+    //Clear tasksContainer
+    tasksContainer.querySelectorAll(".task")
+        .forEach(task => task.remove());
+
+    tasks.forEach((task, id) => {
+        const HTMLString = `
         <div id="${id}" class="task">
             <p><strong>Title:</strong> ${task.title}</p>
             <p><strong>Date:</strong> ${task.date}</p>
             <p><strong>Description:</strong> ${task.description}</p>
-            <button type="button" class="btn">Edit</button>
-            <button type="button" class="btn">Delete</button>
+            <button onclick="editTask(this)" type="button" class="btn">Edit</button>
+            <button onclick="deleteTask(this)" type="button" class="btn">Delete</button>
         </div>
         `;
 
-    // displayTasks.innerHTML += HTMLString;
-    // insertAdjacentHTML is superior to innerHTML += because it does not corrupt the DOM and remove JS references
-    tasksContainer.insertAdjacentHTML("beforeend", HTMLString);
+        //displayTasks.innerHTML += HTMLString;
+        // insertAdjacentHTML is superior to innerHTML += because it does not corrupt the DOM and remove JS references
+        tasksContainer.insertAdjacentHTML("beforeend", HTMLString);
+    });
 
-    reset();
+
+    //
 };
+
+function deleteTask(buttonEL) {
+    const taskId = buttonEL.parentElement.id;
+
+    const isTaskDeleted = tasks.delete(taskId);
+
+    if (isTaskDeleted) {
+        document.getElementById(taskId).remove();
+    }
+}
+
+function editTask(buttonEL) {
+    const taskId = buttonEL.parentElement.id;
+    const taskObjToEdit = tasks.get(taskId);
+
+    // Object destructuring assignment
+    ({title:titleInput.value, date:dateInput.value, description:desc.value} = taskObjToEdit);
+
+    addNewTask();
+}
