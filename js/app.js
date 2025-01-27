@@ -68,6 +68,7 @@ discardButton.addEventListener("click", () => {
     confirmCloseDialog.close();
     // Making sure that the Custom error message is empty to fix bugs during Update task
     titleInput.setCustomValidity("");
+    desc.setCustomValidity("");
     reset();
 });
 
@@ -82,6 +83,21 @@ titleInput.addEventListener("input", (event) => {
     const makeId = stringToId(titleInput.value);
     if (!taskToEditId && tasks.has(makeId)) {
         titleInput.setCustomValidity("You already have a task with this title.");
+    }
+
+    if (titleInput.value.trim() === "") {
+        titleInput.setCustomValidity("Please provide a title");
+    }
+});
+
+desc.addEventListener("input", (event) => {
+    // Validate with the built-in constraints
+    desc.setCustomValidity("");
+    if (!titleInput.validity.valid) return;
+
+    // Extend with a custom constraint
+    if (desc.value.trim() === "") {
+        desc.setCustomValidity("Please provide a description");
     }
 });
 
@@ -169,5 +185,9 @@ function editTask(buttonEL) {
 
 function stringToId(str) {
     return str.toLowerCase().split(" ").join("-");
+}
+
+function removeSpecialCharsExceptWhiteSpace(str) {
+    str.replace(/[^a-zA-Z0-9 ]/g, '');
 }
 
