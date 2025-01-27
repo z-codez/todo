@@ -22,7 +22,14 @@ class Task {
     }
 }
 
-let tasks = new Map();
+
+const isTaskMapUnInitialized = localStorage.getItem("taskMap").length <= 2;
+
+let tasks = isTaskMapUnInitialized? new Map()
+    : new Map(JSON.parse(localStorage.getItem("taskMap")));
+
+
+if(tasks.size) displayTasks();
 
 let taskToEditId;
 
@@ -95,8 +102,11 @@ const addOrUpdateTask = () => {
     if(taskToEditId)  taskToEditId = undefined;
     // Adds or updates tasks map
     tasks.set(id, task);
+
+    // Save to local Storage
+    localStorage.setItem("taskMap", JSON.stringify([...tasks]));
 };
-const displayTasks = () => {
+function displayTasks () {
 
     //Clear tasksContainer
     tasksContainer.querySelectorAll(".task")
@@ -117,10 +127,7 @@ const displayTasks = () => {
         // insertAdjacentHTML is superior to innerHTML += because it does not corrupt the DOM and remove JS references
         tasksContainer.insertAdjacentHTML("beforeend", HTMLString);
     });
-
-
-    //
-};
+}
 
 function addNewTask() {
     taskForm.classList.toggle("hidden");
@@ -130,7 +137,11 @@ function addNewTask() {
 function deleteTask(buttonEL) {
     const taskId = buttonEL.parentElement.id;
 
+    // Delete from tasks
     const isTaskDeleted = tasks.delete(taskId);
+
+    // save changes to local storage
+    localStorage.setItem("taskMap", JSON.stringify([...tasks]));
 
     if (isTaskDeleted) {
         buttonEL.parentElement.remove();
