@@ -1,14 +1,12 @@
 const tasksContainer = document.getElementById("display");
 const newTaskBtn = tasksContainer.querySelector("#add-new-task-btn");
 const wrapper = document.getElementById("wrapper");
-
-// Buttons in the form
 const closeBtn = wrapper.querySelector("#close-btn");
 const taskForm = document.getElementById("task-form")
 const confirmCloseDialog = document.querySelector("dialog");
 const cancelButton = document.getElementById("cancel-btn");
 const discardButton = document.getElementById("discard-btn");
-
+const addOrUpdateTaskBtn = document.getElementById("add-update-task-btn")
 const titleInput = document.getElementById("title");
 const dateInput = document.getElementById("date");
 const desc = document.getElementById("desc");
@@ -26,25 +24,18 @@ class Task {
 
 let tasks = new Map();
 
-// Event Listeners
+let taskToEditId = undefined;
 
+/************** EVENT LISTENERS *****************************/
 newTaskBtn.addEventListener("click", addNewTask);
-
-function addNewTask() {
-    taskForm.classList.toggle("hidden");
-    tasksContainer.classList.toggle("hidden");
-}
 
 taskForm.addEventListener("submit", (e) => {
     e.preventDefault();
-
     addOrUpdateTask();
     displayTasks();
     reset();
-
-
 });
-// Event Listeners
+
 closeBtn.addEventListener("click", () => {
     const formInputsContainValues = titleInput.value || dateInput.value || desc.value;
 
@@ -65,6 +56,20 @@ discardButton.addEventListener("click", () => {
 });
 
 
+// Custom Validation for title input field
+titleInput.addEventListener("input", (event) => {
+    // Validate with the built-in constraints
+    titleInput.setCustomValidity("");
+    if (!titleInput.validity.valid) return;
+
+    // Extend with a custom constraint
+    const makeId = titleInput.value.toLowerCase().split(" ").join("-");
+    if (!taskToEditId && tasks.has(makeId)) {
+        titleInput.setCustomValidity("You already have a task with this title.");
+    }
+});
+
+/****************FUNCTIONS*******************************/
 const reset = () => {
     // Array destructuring to clear input fields
     [titleInput.value, dateInput.value, desc.value] = ["","",""];
@@ -74,10 +79,10 @@ const reset = () => {
 };
 
 const addOrUpdateTask = () => {
-
     const task = new Task(titleInput.value, dateInput.value, desc.value);
     let id = task.title.toLowerCase().split(" ").join("-");
 
+    if(taskToEditId)  taskToEditId = undefined;
     // Adds or updates tasks map
     tasks.set(id, task);
 };
@@ -107,13 +112,18 @@ const displayTasks = () => {
     //
 };
 
+function addNewTask() {
+    taskForm.classList.toggle("hidden");
+    tasksContainer.classList.toggle("hidden");
+}
+
 function deleteTask(buttonEL) {
     const taskId = buttonEL.parentElement.id;
 
     const isTaskDeleted = tasks.delete(taskId);
 
     if (isTaskDeleted) {
-        document.getElementById(taskId).remove();
+        buttonEL.parentElement.remove();
     }
 }
 
@@ -123,6 +133,11 @@ function editTask(buttonEL) {
 
     // Object destructuring assignment
     ({title:titleInput.value, date:dateInput.value, description:desc.value} = taskObjToEdit);
+    // Change the text inside the button
+    addOrUpdateTaskBtn.innerText = "Update Task";
+
+    // assign to global variable
+    taskToEditId = taskId;
 
     addNewTask();
 }
