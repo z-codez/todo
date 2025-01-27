@@ -40,8 +40,14 @@ taskForm.addEventListener("submit", (e) => {
 closeBtn.addEventListener("click", () => {
     const formInputsContainValues = titleInput.value || dateInput.value || desc.value;
 
-    if(formInputsContainValues) {
+    if(formInputsContainValues && !taskToEditId) {
         confirmCloseDialog.showModal();
+    } else if(taskToEditId) {
+        const inputsTask = new Task(titleInput.value, dateInput.value, desc.value);
+        const taskToEdit = tasks.get(taskToEditId);
+
+        if (JSON.stringify(inputsTask) === JSON.stringify(taskToEdit)) reset();
+        else confirmCloseDialog.showModal();
     } else {
         reset();
     }
@@ -66,7 +72,7 @@ titleInput.addEventListener("input", (event) => {
     if (!titleInput.validity.valid) return;
 
     // Extend with a custom constraint
-    const makeId = titleInput.value.toLowerCase().split(" ").join("-");
+    const makeId = stringToId(titleInput.value);
     if (!taskToEditId && tasks.has(makeId)) {
         titleInput.setCustomValidity("You already have a task with this title.");
     }
@@ -79,11 +85,12 @@ const reset = () => {
 
     taskForm.classList.toggle("hidden");
     tasksContainer.classList.toggle("hidden");
+    addOrUpdateTaskBtn.innerText = "Add Task";
 };
 
 const addOrUpdateTask = () => {
     const task = new Task(titleInput.value, dateInput.value, desc.value);
-    let id = task.title.toLowerCase().split(" ").join("-");
+    let id = stringToId(task.title);
 
     if(taskToEditId)  taskToEditId = undefined;
     // Adds or updates tasks map
@@ -136,7 +143,7 @@ function editTask(buttonEL) {
 
     // Object destructuring assignment
     ({title:titleInput.value, date:dateInput.value, description:desc.value} = taskObjToEdit);
-    console.log("From Edit Button: " + taskToEditId);
+
     // Change the text inside the button
     addOrUpdateTaskBtn.innerText = "Update Task";
 
@@ -144,5 +151,12 @@ function editTask(buttonEL) {
 
     // assign to global variable
     taskToEditId = taskId;
+}
+
+
+/////// Helper Functions ///////////////////
+
+function stringToId(str) {
+    return str.toLowerCase().split(" ").join("-");
 }
 
