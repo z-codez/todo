@@ -24,7 +24,8 @@ class Task {
 
 let tasks = new Map();
 
-let taskToEditId = undefined;
+let taskToEditId;
+
 
 /************** EVENT LISTENERS *****************************/
 newTaskBtn.addEventListener("click", addNewTask);
@@ -52,6 +53,8 @@ cancelButton.addEventListener("click", ()=>{
 
 discardButton.addEventListener("click", () => {
     confirmCloseDialog.close();
+    // Making sure that the Custom error message is empty to fix bugs during Update task
+    titleInput.setCustomValidity("");
     reset();
 });
 
@@ -133,11 +136,13 @@ function editTask(buttonEL) {
 
     // Object destructuring assignment
     ({title:titleInput.value, date:dateInput.value, description:desc.value} = taskObjToEdit);
+    console.log("From Edit Button: " + taskToEditId);
     // Change the text inside the button
     addOrUpdateTaskBtn.innerText = "Update Task";
 
+    addNewTask();
+
     // assign to global variable
     taskToEditId = taskId;
-
-    addNewTask();
 }
+
